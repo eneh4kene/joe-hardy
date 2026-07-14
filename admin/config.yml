@@ -18,12 +18,30 @@ collections:
           - { label: "Monthly", name: "monthly", widget: "string" }
           - { label: "3 Months", name: "three_months", widget: "string" }
           - { label: "Yearly Package", name: "yearly", widget: "string" }
+          - label: "Stripe Payment Links"
+            name: "stripe"
+            widget: "object"
+            required: false
+            hint: "Leave blank to keep the 'Book Now' mailto flow for that tier. Paste the Payment Link URL from your Stripe Dashboard to switch it to real checkout."
+            fields:
+              - { label: "Per Session Link", name: "per_session", widget: "string", required: false }
+              - { label: "Monthly Link", name: "monthly", widget: "string", required: false }
+              - { label: "3 Months Link", name: "three_months", widget: "string", required: false }
+              - { label: "Yearly Package Link", name: "yearly", widget: "string", required: false }
       - label: "Group Sessions (In Person)"
         name: "group"
         file: "_data/pricing_in_person_group.json"
         fields:
           - { label: "Per Session", name: "per_session", widget: "string" }
           - { label: "Monthly", name: "monthly", widget: "string" }
+          - label: "Stripe Payment Links"
+            name: "stripe"
+            widget: "object"
+            required: false
+            hint: "Leave blank to keep the 'Book Now' mailto flow for that tier."
+            fields:
+              - { label: "Per Session Link", name: "per_session", widget: "string", required: false }
+              - { label: "Monthly Link", name: "monthly", widget: "string", required: false }
       - label: "Couple Package (In Person)"
         name: "couple"
         file: "_data/pricing_in_person_couple.json"
@@ -32,6 +50,16 @@ collections:
           - { label: "Monthly", name: "monthly", widget: "string" }
           - { label: "3 Months", name: "three_months", widget: "string" }
           - { label: "Yearly Package", name: "yearly", widget: "string" }
+          - label: "Stripe Payment Links"
+            name: "stripe"
+            widget: "object"
+            required: false
+            hint: "Leave blank to keep the 'Book Now' mailto flow for that tier."
+            fields:
+              - { label: "Per Session Link", name: "per_session", widget: "string", required: false }
+              - { label: "Monthly Link", name: "monthly", widget: "string", required: false }
+              - { label: "3 Months Link", name: "three_months", widget: "string", required: false }
+              - { label: "Yearly Package Link", name: "yearly", widget: "string", required: false }
 
   - name: "pricing_online"
     label: "Pricing — Online"
@@ -44,12 +72,30 @@ collections:
           - { label: "Monthly", name: "monthly", widget: "string" }
           - { label: "3 Months", name: "three_months", widget: "string" }
           - { label: "Yearly Package", name: "yearly", widget: "string" }
+          - label: "Stripe Payment Links"
+            name: "stripe"
+            widget: "object"
+            required: false
+            hint: "Leave blank to keep the 'Book Now' mailto flow for that tier."
+            fields:
+              - { label: "Per Session Link", name: "per_session", widget: "string", required: false }
+              - { label: "Monthly Link", name: "monthly", widget: "string", required: false }
+              - { label: "3 Months Link", name: "three_months", widget: "string", required: false }
+              - { label: "Yearly Package Link", name: "yearly", widget: "string", required: false }
       - label: "Online Group Sessions"
         name: "group"
         file: "_data/pricing_online_group.json"
         fields:
           - { label: "Per Session", name: "per_session", widget: "string" }
           - { label: "Monthly", name: "monthly", widget: "string" }
+          - label: "Stripe Payment Links"
+            name: "stripe"
+            widget: "object"
+            required: false
+            hint: "Leave blank to keep the 'Book Now' mailto flow for that tier."
+            fields:
+              - { label: "Per Session Link", name: "per_session", widget: "string", required: false }
+              - { label: "Monthly Link", name: "monthly", widget: "string", required: false }
       - label: "Couple Online Package"
         name: "couple"
         file: "_data/pricing_online_couple.json"
@@ -58,6 +104,16 @@ collections:
           - { label: "Monthly", name: "monthly", widget: "string" }
           - { label: "3 Months", name: "three_months", widget: "string" }
           - { label: "Yearly Package", name: "yearly", widget: "string" }
+          - label: "Stripe Payment Links"
+            name: "stripe"
+            widget: "object"
+            required: false
+            hint: "Leave blank to keep the 'Book Now' mailto flow for that tier."
+            fields:
+              - { label: "Per Session Link", name: "per_session", widget: "string", required: false }
+              - { label: "Monthly Link", name: "monthly", widget: "string", required: false }
+              - { label: "3 Months Link", name: "three_months", widget: "string", required: false }
+              - { label: "Yearly Package Link", name: "yearly", widget: "string", required: false }
 
   - name: "merch"
     label: "Merchandise"
@@ -81,6 +137,15 @@ collections:
           - { label: "Enable Shopify Checkout", name: "enabled", widget: "boolean", default: false, hint: "Turn on once your Shopify + Printify store is set up and at least one product above has a Shopify Product ID." }
           - { label: "Shopify Domain", name: "shopify_domain", widget: "string", required: false, hint: "e.g. joe-hardy-fitness.myshopify.com" }
           - { label: "Storefront Access Token", name: "shopify_storefront_token", widget: "string", required: false, hint: "Shopify Admin → Settings → Apps and sales channels → Develop apps → create an app → Storefront API → install → copy the Storefront API access token. This token is safe to expose publicly, it only allows reading products and creating checkouts." }
+
+  - name: "payments"
+    label: "Payments"
+    files:
+      - label: "Stripe"
+        name: "stripe"
+        file: "_data/payments.json"
+        fields:
+          - { label: "Enable Stripe Checkout", name: "stripe_enabled", widget: "boolean", default: false, hint: "Turn on once you've pasted Payment Link URLs into the pricing packages above. Booking buttons for tiers without a link will keep using the mailto flow." }
 
   - name: "settings"
     label: "Site Settings"

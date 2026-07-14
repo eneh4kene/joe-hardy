@@ -1,4 +1,8 @@
 {
   "per_session": "£10",
-  "monthly": "£35/mo"
+  "monthly": "£35/mo",
+  "stripe": {
+    "per_session": "https://buy.stripe.com/test_aFabJ3fmB4w41M689kaIM04",
+    "monthly": "https://buy.stripe.com/test_6oU7sN4HXgeM9ey0GSaIM05"
+  }
 }

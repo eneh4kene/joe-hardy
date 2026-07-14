@@ -2,5 +2,11 @@
   "per_session": "£40",
   "monthly": "£150/mo",
   "three_months": "£400",
-  "yearly": "£1,400"
+  "yearly": "£1,400",
+  "stripe": {
+    "per_session": "https://buy.stripe.com/test_dRmcN74HX9QoeyS1KWaIM0g",
+    "monthly": "https://buy.stripe.com/test_aFafZjgqF6EceySdtEaIM0h",
+    "three_months": "https://buy.stripe.com/test_00w7sN0rH4w4gH00GSaIM0i",
+    "yearly": "https://buy.stripe.com/test_bJe7sNcap2nWgH02P0aIM0j"
+  }
 }
