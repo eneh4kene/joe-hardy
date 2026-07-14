@@ -731,6 +731,9 @@
     }
     .btn-order:hover { background: rgba(245,197,24,0.15); border-color: var(--gold); }
 
+    .mcard-buybutton { min-height: 34px; }
+    .mcard-buybutton .shopify-buy-frame { display: block; width: 100%; }
+
     .merch-note {
       font-size: 13px; color: var(--muted);
       text-align: center; margin-top: 28px;
@@ -1270,7 +1273,6 @@
       </div>
 
       <p class="merch-note">Message us to check availability and sizes. Orders fulfilled directly.</p>
-      <!-- FUTURE: replace mailto buttons with Shopify Buy Button or Stripe Payment Links -->
 
     </div>
   </section>
@@ -1502,9 +1504,10 @@
       return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
     }
 
-    function renderMerch(items) {
+    function renderMerch(items, shop) {
       const grid = document.getElementById('merch-grid');
-      grid.innerHTML = items.map(item => {
+      const shopLive = !!(shop && shop.enabled && shop.shopify_domain && shop.shopify_storefront_token);
+      grid.innerHTML = items.map((item, i) => {
         const enc = encodeURIComponent(item.name);
         const safeName = escapeHtml(item.name);
         const priceHtml = item.price
@@ -1514,6 +1517,9 @@
         const imgHtml = item.image
           ? `<img src="${escapeHtml(item.image)}" alt="${safeName} — Joe Hardy Fitness" width="300" height="300" loading="lazy">`
           : `<div class="mcard-placeholder" aria-hidden="true"><span>${safeName}</span><small style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7">Photo coming soon</small></div>`;
+        const ctaHtml = (shopLive && item.shopify_product_id)
+          ? `<div class="mcard-buybutton" id="buybutton-${i}"></div>`
+          : `<a href="mailto:fitflexcity@gmail.com?subject=Merch%20Enquiry%20%E2%80%93%20${enc}" class="btn-order">Order Now</a>`;
         return `<div class="mcard fade-up">
           <div class="mcard-img">
             ${imgHtml}
@@ -1522,7 +1528,7 @@
           <div class="mcard-body">
             <div class="mcard-name">${safeName}</div>
             ${priceHtml}
-            <a href="mailto:fitflexcity@gmail.com?subject=Merch%20Enquiry%20%E2%80%93%20${enc}" class="btn-order">Order Now</a>
+            ${ctaHtml}
           </div>
         </div>`;
       }).join('');
@@ -1546,22 +1552,106 @@
       });
     }
 
+    /* ── SHOPIFY BUY BUTTON (only loaded once shop.json has enabled:true + a domain/token) ── */
+    let shopifySdkPromise = null;
+    function loadShopifySdk() {
+      if (window.ShopifyBuy) return Promise.resolve(window.ShopifyBuy);
+      if (shopifySdkPromise) return shopifySdkPromise;
+      shopifySdkPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
+        script.async = true;
+        script.onload = () => resolve(window.ShopifyBuy);
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+      return shopifySdkPromise;
+    }
+
+    async function mountShopifyBuyButtons(items, shop) {
+      const targets = items
+        .map((item, i) => ({ item, i }))
+        .filter(({ item }) => item.shopify_product_id);
+      if (!targets.length) return;
+      try {
+        const ShopifyBuy = await loadShopifySdk();
+        const client = ShopifyBuy.buildClient({
+          domain: shop.shopify_domain,
+          storefrontAccessToken: shop.shopify_storefront_token,
+        });
+        const ui = await ShopifyBuy.UI.onReady(client);
+        targets.forEach(({ item, i }) => {
+          const node = document.getElementById('buybutton-' + i);
+          if (!node) return;
+          ui.createComponent('product', {
+            id: item.shopify_product_id,
+            node,
+            moneyFormat: '%C2%A3%7B%7Bamount%7D%7D',
+            options: {
+              product: {
+                buttonDestination: 'checkout',
+                contents: { img: false, title: false, price: false, options: false, button: true },
+                text: { button: 'Order Now' },
+                styles: {
+                  button: {
+                    'font-family': 'Inter, sans-serif',
+                    'font-size': '10px',
+                    'font-weight': '700',
+                    'letter-spacing': '0.14em',
+                    'text-transform': 'uppercase',
+                    color: '#F5C518',
+                    'background-color': 'rgba(245,197,24,0.07)',
+                    border: '1px solid rgba(245,197,24,0.22)',
+                    'border-radius': '4px',
+                    'padding-top': '10px',
+                    'padding-bottom': '10px',
+                    ':hover': { 'background-color': 'rgba(245,197,24,0.15)', 'border-color': '#F5C518' },
+                    ':focus': { 'background-color': 'rgba(245,197,24,0.15)' },
+                  },
+                  wrapper: { 'margin-bottom': '0' },
+                },
+              },
+              modalProduct: {
+                contents: { img: false, imgWithCarousel: true, button: false, buttonWithQuantity: true },
+                styles: {
+                  button: {
+                    'background-color': '#F5C518',
+                    ':hover': { 'background-color': '#C49A10' },
+                    ':focus': { 'background-color': '#C49A10' },
+                    'border-radius': '4px',
+                  },
+                },
+              },
+            },
+          });
+        });
+      } catch (err) {
+        /* Shopify SDK failed to load (offline, blocked, bad credentials) — the mailto fallback CTA was never removed for unconfigured items, but configured ones will just show an empty slot. Log for debugging. */
+        console.error('Shopify Buy Button failed to mount', err);
+      }
+    }
+
     async function loadMerch() {
       const slugs = ['t-shirt', 'shorts', 'tracksuit', 'cap', 'socks'];
       try {
-        const results = await Promise.all(
-          slugs.map((s, i) =>
-            fetch('/_data/merch/' + s + '.json')
-              .then(r => r.ok ? r.json() : null)
-              .catch(() => null)
-          )
-        );
+        const [results, shop] = await Promise.all([
+          Promise.all(
+            slugs.map((s, i) =>
+              fetch('/_data/merch/' + s + '.json')
+                .then(r => r.ok ? r.json() : null)
+                .catch(() => null)
+            )
+          ),
+          fetch('/_data/shop.json').then(r => r.ok ? r.json() : null).catch(() => null),
+        ]);
         const items = results.map((d, i) => ({
           name:  (d && d.name)  || merchDefault[i].name,
           price: (d && d.price) || '',
           image: (d && d.image) || null,
+          shopify_product_id: (d && d.shopify_product_id) || null,
         }));
-        renderMerch(items);
+        renderMerch(items, shop);
+        if (shop && shop.enabled) mountShopifyBuyButtons(items, shop);
       } catch {
         renderMerch(merchDefault);
       }

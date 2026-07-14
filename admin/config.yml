@@ -69,6 +69,18 @@ collections:
       - { label: "Price", name: "price", widget: "string", hint: "e.g. £25" }
       - { label: "Product Image", name: "image", widget: "image", required: false }
       - { label: "Available", name: "available", widget: "boolean", default: true }
+      - { label: "Shopify Product ID", name: "shopify_product_id", widget: "string", required: false, hint: "Leave blank to keep the 'message us' order flow. Fill in once this product exists in Shopify (Admin → Products → the ID is the long number in the product's URL) to switch on real checkout." }
+
+  - name: "shop"
+    label: "Shop / Checkout"
+    files:
+      - label: "Shopify Connection"
+        name: "shopify"
+        file: "_data/shop.json"
+        fields:
+          - { label: "Enable Shopify Checkout", name: "enabled", widget: "boolean", default: false, hint: "Turn on once your Shopify + Printify store is set up and at least one product above has a Shopify Product ID." }
+          - { label: "Shopify Domain", name: "shopify_domain", widget: "string", required: false, hint: "e.g. joe-hardy-fitness.myshopify.com" }
+          - { label: "Storefront Access Token", name: "shopify_storefront_token", widget: "string", required: false, hint: "Shopify Admin → Settings → Apps and sales channels → Develop apps → create an app → Storefront API → install → copy the Storefront API access token. This token is safe to expose publicly, it only allows reading products and creating checkouts." }
 
   - name: "settings"
     label: "Site Settings"

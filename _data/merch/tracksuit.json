@@ -2,5 +2,6 @@
   "name": "Tracksuit",
   "price": "",
   "image": "",
-  "available": true
+  "available": true,
+  "shopify_product_id": ""
 }
