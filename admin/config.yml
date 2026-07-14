@@ -1,0 +1,85 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+
+  - name: "pricing_in_person"
+    label: "Pricing — In Person"
+    files:
+      - label: "1:1 In Person"
+        name: "one_to_one"
+        file: "_data/pricing_in_person_1to1.json"
+        fields:
+          - { label: "Per Session", name: "per_session", widget: "string" }
+          - { label: "Monthly", name: "monthly", widget: "string" }
+          - { label: "3 Months", name: "three_months", widget: "string" }
+          - { label: "Yearly Package", name: "yearly", widget: "string" }
+      - label: "Group Sessions (In Person)"
+        name: "group"
+        file: "_data/pricing_in_person_group.json"
+        fields:
+          - { label: "Per Session", name: "per_session", widget: "string" }
+          - { label: "Monthly", name: "monthly", widget: "string" }
+      - label: "Couple Package (In Person)"
+        name: "couple"
+        file: "_data/pricing_in_person_couple.json"
+        fields:
+          - { label: "Per Session", name: "per_session", widget: "string" }
+          - { label: "Monthly", name: "monthly", widget: "string" }
+          - { label: "3 Months", name: "three_months", widget: "string" }
+          - { label: "Yearly Package", name: "yearly", widget: "string" }
+
+  - name: "pricing_online"
+    label: "Pricing — Online"
+    files:
+      - label: "1:1 Online"
+        name: "one_to_one"
+        file: "_data/pricing_online_1to1.json"
+        fields:
+          - { label: "Per Session", name: "per_session", widget: "string" }
+          - { label: "Monthly", name: "monthly", widget: "string" }
+          - { label: "3 Months", name: "three_months", widget: "string" }
+          - { label: "Yearly Package", name: "yearly", widget: "string" }
+      - label: "Online Group Sessions"
+        name: "group"
+        file: "_data/pricing_online_group.json"
+        fields:
+          - { label: "Per Session", name: "per_session", widget: "string" }
+          - { label: "Monthly", name: "monthly", widget: "string" }
+      - label: "Couple Online Package"
+        name: "couple"
+        file: "_data/pricing_online_couple.json"
+        fields:
+          - { label: "Per Session", name: "per_session", widget: "string" }
+          - { label: "Monthly", name: "monthly", widget: "string" }
+          - { label: "3 Months", name: "three_months", widget: "string" }
+          - { label: "Yearly Package", name: "yearly", widget: "string" }
+
+  - name: "merch"
+    label: "Merchandise"
+    folder: "_data/merch"
+    create: true
+    slug: "{{name}}"
+    fields:
+      - { label: "Product Name", name: "name", widget: "string" }
+      - { label: "Price", name: "price", widget: "string", hint: "e.g. £25" }
+      - { label: "Product Image", name: "image", widget: "image", required: false }
+      - { label: "Available", name: "available", widget: "boolean", default: true }
+
+  - name: "settings"
+    label: "Site Settings"
+    files:
+      - label: "Contact & General"
+        name: "contact"
+        file: "_data/settings.json"
+        fields:
+          - { label: "Phone / WhatsApp", name: "phone", widget: "string" }
+          - { label: "Email", name: "email", widget: "string" }
+          - { label: "Instagram URL", name: "instagram", widget: "string" }
+          - { label: "TikTok URL", name: "tiktok", widget: "string" }
+          - { label: "Facebook URL", name: "facebook", widget: "string" }
+          - { label: "Referral Offer Text", name: "referral", widget: "text" }

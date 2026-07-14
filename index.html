@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Joe Hardy Fitness — Personal Training Online & In Person. Get Fit, Stronger & Motivated.">
+  <title>Joe Hardy Fitness — Get Fit, Stronger & Motivated</title>
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230A0A0A'/%3E%3Ctext x='50' y='68' font-family='Georgia,serif' font-size='60' font-weight='bold' fill='%23F5C518' text-anchor='middle'%3EJ%3C/text%3E%3C/svg%3E">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Joe Hardy Fitness">
+  <meta property="og:title" content="Joe Hardy Fitness — Get Fit, Stronger & Motivated">
+  <meta property="og:description" content="Personal Training Online & In Person. Tailored workout plans, nutrition guidance, and accountability with Joe Hardy.">
+  <meta property="og:url" content="https://joe-hardy-fitness.netlify.app">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Joe Hardy Fitness — Get Fit, Stronger & Motivated">
+  <meta name="twitter:description" content="Personal Training Online & In Person. Tailored workout plans, nutrition guidance, and accountability with Joe Hardy.">
+  <!-- REPLACE: once Joe has a real photo, add og:image / twitter:image (and twitter:card=summary_large_image) pointing at it -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== RESET ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #0A0A0A;
+      color: #FFFFFF;
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ===== TOKENS ===== */
+    :root {
+      --bg: #0A0A0A;
+      --surface: #111111;
+      --card: #181818;
+      --gold: #F5C518;
+      --gold-dim: #C49A10;
+      --white: #FFFFFF;
+      --muted: #999999;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --glow: 0 0 40px rgba(245, 197, 24, 0.35);
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+    /* ===== SCROLL PROGRESS ===== */
+    #progress-bar {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold-dim), var(--gold), #FFE566);
+      transform-origin: left;
+      transform: scaleX(0);
+      z-index: 10000;
+      will-change: transform;
+    }
+
+    /* ===== GRAIN ===== */
+    .grain {
+      position: fixed; inset: -50%;
+      width: 200%; height: 200%;
+      pointer-events: none; z-index: 9998;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+      animation: grain 0.4s steps(3) infinite;
+    }
+    @keyframes grain {
+      0%, 100% { transform: translate(0, 0); }
+      25%  { transform: translate(-3%, -2%); }
+      50%  { transform: translate(3%,  2%); }
+      75%  { transform: translate(-2%, 3%); }
+    }
+
+    /* ===== CURSOR ===== */
+    .cursor {
+      position: fixed; width: 7px; height: 7px;
+      background: var(--gold); border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background 0.2s;
+      will-change: left, top;
+    }
+    .cursor-ring {
+      position: fixed; width: 38px; height: 38px;
+      border: 1.5px solid rgba(245, 197, 24, 0.45);
+      border-radius: 50%; pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.25s var(--ease-out), height 0.25s var(--ease-out), border-color 0.2s;
+      will-change: left, top;
+    }
+    .cursor-ring.big { width: 60px; height: 60px; border-color: var(--gold); }
+
+    /* ===== UTILITIES ===== */
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 12px;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 16px;
+    }
+    .eyebrow::before {
+      content: ''; display: block;
+      width: 32px; height: 1px; background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .fade-up {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ===== NAV ===== */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: 72px; padding: 0 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background 0.35s, backdrop-filter 0.35s, border-bottom 0.35s;
+    }
+    #nav.solid {
+      background: rgba(10, 10, 10, 0.9);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(245, 197, 24, 0.1);
+    }
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 21px; letter-spacing: 0.05em;
+      color: var(--gold); text-decoration: none;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 40px; list-style: none;
+    }
+    .nav-links a {
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.75); text-decoration: none;
+      position: relative; transition: color 0.15s;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0;
+      width: 0; height: 1px; background: var(--gold);
+      transition: width 0.25s var(--ease-out);
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { width: 100%; }
+    .btn-nav {
+      padding: 10px 24px; background: var(--gold);
+      color: #000; font-size: 12px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      text-decoration: none; border-radius: 100px;
+      transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
+    }
+    .btn-nav:hover {
+      background: #FFE566;
+      box-shadow: var(--glow);
+      transform: translateY(-1px);
+    }
+
+    /* hamburger */
+    .ham {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; padding: 4px; cursor: none;
+    }
+    .ham span {
+      display: block; width: 24px; height: 2px;
+      background: var(--white); border-radius: 1px;
+      transition: all 0.3s;
+    }
+    .ham.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .ham.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .ham.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mob-nav {
+      display: none; position: fixed;
+      top: 72px; left: 0; right: 0; z-index: 999;
+      background: rgba(10, 10, 10, 0.97);
+      backdrop-filter: blur(24px);
+      padding: 28px 32px 36px;
+      border-bottom: 1px solid rgba(245, 197, 24, 0.1);
+      opacity: 0; transform: translateY(-8px);
+      transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+    }
+    .mob-nav.open { opacity: 1; transform: translateY(0); }
+    .mob-nav ul { list-style: none; display: flex; flex-direction: column; gap: 20px; }
+    .mob-nav a {
+      font-size: 18px; font-weight: 500; text-decoration: none;
+      color: var(--white); letter-spacing: 0.04em;
+      transition: color 0.15s;
+    }
+    .mob-nav a:hover { color: var(--gold); }
+    .mob-nav .btn-nav { margin-top: 8px; display: inline-block; }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative; min-height: 100svh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      background: #0A0A0A;
+    }
+
+    /* Video background */
+    .hero-video {
+      position: absolute; inset: 0; z-index: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      filter: brightness(0.28) saturate(0.7);
+      transition: opacity 1.2s ease;
+      pointer-events: none;
+    }
+    .hero-video.loaded { opacity: 1; }
+
+    /* Gold colour-grade overlay on top of video */
+    .hero-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(
+        160deg,
+        rgba(10,10,0,0.55) 0%,
+        rgba(0,0,0,0.15) 50%,
+        rgba(10,5,0,0.7) 100%
+      );
+      pointer-events: none;
+    }
+
+    .blobs { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; }
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px); opacity: 0.1;
+    }
+    .blob-1 {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, var(--gold), transparent 65%);
+      top: -250px; left: -250px;
+      animation: bfloat 14s ease-in-out infinite;
+    }
+    .blob-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, var(--gold-dim), transparent 65%);
+      bottom: -150px; right: -150px;
+      animation: bfloat 10s ease-in-out infinite reverse;
+    }
+    .blob-3 {
+      width: 380px; height: 380px;
+      background: radial-gradient(circle, #F5C518, transparent 65%);
+      top: 45%; left: 65%;
+      animation: bfloat 17s ease-in-out 4s infinite;
+    }
+    @keyframes bfloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%  { transform: translate(50px, -40px) scale(1.06); }
+      66%  { transform: translate(-25px, 30px) scale(0.94); }
+    }
+
+    .hero-inner {
+      position: relative; z-index: 3;
+      text-align: center; padding: 100px 32px 0;
+      width: 100%;
+    }
+
+    .hero-chip {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 9px 20px;
+      border: 1px solid rgba(245, 197, 24, 0.3);
+      border-radius: 100px;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(245, 197, 24, 0.05);
+      backdrop-filter: blur(8px);
+      margin-bottom: 36px;
+      opacity: 0; animation: fadeIn 0.6s 0.1s var(--ease-out) forwards;
+    }
+    .hero-chip-dot {
+      width: 6px; height: 6px; background: var(--gold);
+      border-radius: 50%; flex-shrink: 0;
+      animation: pdot 2s ease-in-out infinite;
+    }
+    @keyframes pdot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%  { transform: scale(1.5); opacity: 0.55; }
+    }
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    .hero-h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      line-height: 0.88; margin-bottom: 24px;
+    }
+    .hero-name {
+      display: block;
+      font-size: clamp(68px, 13.5vw, 196px);
+      background: linear-gradient(135deg, #996900 0%, var(--gold-dim) 20%, var(--gold) 45%, #FFE566 55%, var(--gold-dim) 75%, #996900 100%);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gShimmer 5s ease-in-out infinite, slideLeft 0.9s 0.2s var(--ease-out) both;
+    }
+    .hero-fitness {
+      display: block;
+      font-size: clamp(68px, 13.5vw, 196px);
+      color: var(--white);
+      animation: slideRight 0.9s 0.35s var(--ease-out) both;
+    }
+    @keyframes gShimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+    }
+    @keyframes slideLeft {
+      from { opacity: 0; transform: translateX(-40px) skewX(-3deg); }
+      to   { opacity: 1; transform: translateX(0) skewX(0); }
+    }
+    @keyframes slideRight {
+      from { opacity: 0; transform: translateX(40px) skewX(3deg); }
+      to   { opacity: 1; transform: translateX(0) skewX(0); }
+    }
+
+    .hero-sub {
+      font-size: clamp(14px, 1.8vw, 21px);
+      color: var(--muted); font-weight: 300;
+      letter-spacing: 0.03em; margin-bottom: 48px;
+      animation: fadeIn 0.7s 0.6s var(--ease-out) both;
+    }
+
+    .hero-btns {
+      display: flex; align-items: center; justify-content: center;
+      gap: 14px; flex-wrap: wrap;
+      animation: fadeIn 0.7s 0.75s var(--ease-out) both;
+    }
+    .btn-gold {
+      display: inline-flex; align-items: center; gap: 9px;
+      padding: 17px 38px;
+      background: var(--gold); color: #000;
+      font-weight: 700; font-size: 12px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      text-decoration: none; border-radius: 4px;
+      position: relative; overflow: hidden;
+      transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
+    }
+    .btn-gold::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.28) 50%, transparent 75%);
+      transform: translateX(-100%);
+      transition: transform 0.45s ease;
+    }
+    .btn-gold:hover::after { transform: translateX(100%); }
+    .btn-gold:hover {
+      background: #FFE566;
+      box-shadow: 0 0 50px rgba(245,197,24,0.45), 0 12px 32px rgba(0,0,0,0.5);
+      transform: translateY(-2px);
+    }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 9px;
+      padding: 17px 38px;
+      background: transparent; color: var(--white);
+      font-weight: 600; font-size: 12px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      text-decoration: none; border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.28);
+      transition: border-color 0.15s, background 0.15s, transform 0.15s;
+    }
+    .btn-ghost:hover {
+      border-color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.05);
+      transform: translateY(-2px);
+    }
+
+    .hero-rule {
+      margin: 52px auto 0;
+      height: 1px; width: 0; max-width: 440px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      animation: ruleExpand 1.6s 1s var(--ease-out) forwards;
+    }
+    @keyframes ruleExpand { to { width: 100%; } }
+
+    .hero-scroll {
+      position: absolute; bottom: 36px; left: 50%; z-index: 3;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.2em;
+      text-transform: uppercase; color: rgba(255,255,255,0.3);
+      animation: fadeIn 1s 1.4s var(--ease-out) both;
+    }
+    .scroll-line {
+      width: 1px; height: 44px;
+      background: linear-gradient(to bottom, rgba(245,197,24,0.6), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { transform: scaleY(1); opacity: 1; }
+      50% { transform: scaleY(0.6); opacity: 0.4; }
+    }
+
+    /* ===== TICKER ===== */
+    .ticker {
+      background: var(--gold); padding: 13px 0;
+      overflow: hidden; position: relative;
+    }
+    .ticker-track {
+      display: flex; width: max-content;
+      animation: tickerScroll 28s linear infinite;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
+    @keyframes tickerScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .ticker-item {
+      display: flex; align-items: center; gap: 20px;
+      padding: 0 24px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 15px; letter-spacing: 0.18em;
+      color: #000; white-space: nowrap;
+    }
+    .ticker-sep {
+      width: 4px; height: 4px;
+      background: rgba(0,0,0,0.35); border-radius: 50%;
+    }
+
+    /* ===== ABOUT ===== */
+    .about {
+      padding: 148px 0;
+      position: relative; overflow: hidden;
+    }
+    .about-ghost {
+      position: absolute; top: 20px; right: -16px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(110px, 17vw, 250px);
+      color: rgba(255,255,255,0.022);
+      line-height: 1; pointer-events: none;
+      user-select: none; letter-spacing: -0.04em;
+    }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 88px; align-items: center;
+    }
+    .about-img-wrap { position: relative; }
+    .img-frame {
+      position: relative;
+      background: var(--card);
+      border: 1px solid rgba(245, 197, 24, 0.3);
+      border-radius: 3px;
+    }
+    .img-frame::before {
+      content: '';
+      position: absolute; top: -18px; left: -18px;
+      width: 58%; height: 58%;
+      border-top: 2px solid var(--gold);
+      border-left: 2px solid var(--gold);
+      pointer-events: none; z-index: 1;
+      transition: opacity 0.3s;
+    }
+    .img-frame::after {
+      content: '';
+      position: absolute; bottom: -18px; right: -18px;
+      width: 58%; height: 58%;
+      border-bottom: 2px solid var(--gold);
+      border-right: 2px solid var(--gold);
+      pointer-events: none;
+    }
+    .img-clip { border-radius: 3px; overflow: hidden; }
+    .img-frame img {
+      width: 100%; height: auto; display: block;
+      filter: grayscale(15%) contrast(1.05);
+      transition: filter 0.4s, transform 0.4s var(--ease-out);
+    }
+    .img-frame:hover img {
+      filter: grayscale(0%) contrast(1.08);
+      transform: scale(1.02);
+    }
+    .about-text h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(52px, 6vw, 88px);
+      line-height: 0.88; letter-spacing: 0.03em;
+      margin-bottom: 24px;
+    }
+    .about-text p {
+      font-size: 16px; line-height: 1.85;
+      color: var(--muted); margin-bottom: 40px;
+      max-width: 460px;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 9px;
+      padding: 10px 18px;
+      border: 1px solid rgba(245,197,24,0.38);
+      border-radius: 100px;
+      font-size: 13px; font-weight: 500;
+      color: var(--gold);
+      background: rgba(245,197,24,0.045);
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .chip:hover { background: rgba(245,197,24,0.1); border-color: var(--gold); }
+    .chip-tick {
+      width: 17px; height: 17px;
+      background: var(--gold); border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 9px; color: #000; font-weight: 800; line-height: 1;
+      flex-shrink: 0;
+    }
+
+    /* ===== DIVIDER ===== */
+    .divider {
+      height: 1px; margin: 0 32px;
+      background: linear-gradient(90deg, transparent, rgba(245,197,24,0.18), transparent);
+    }
+
+    /* ===== PRICING ===== */
+    .pricing {
+      padding: 148px 0;
+      position: relative; overflow: hidden;
+    }
+    .pricing-ghost {
+      position: absolute; top: 20px; left: -16px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(110px, 17vw, 250px);
+      color: rgba(255,255,255,0.022);
+      line-height: 1; pointer-events: none;
+      user-select: none; letter-spacing: -0.04em;
+    }
+    .pricing-head {
+      text-align: center; margin-bottom: 56px;
+    }
+    .pricing-head h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(52px, 7.5vw, 108px);
+      line-height: 0.88;
+    }
+    .pricing-head p { font-size: 15px; color: var(--muted); margin-top: 12px; }
+
+    .tabs {
+      display: flex; justify-content: center; margin-bottom: 64px;
+      border: 1px solid rgba(245,197,24,0.22); border-radius: 5px;
+      overflow: hidden; width: fit-content; margin-left: auto; margin-right: auto;
+    }
+    .tab {
+      padding: 13px 40px;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      background: transparent; color: var(--muted);
+      border: none; cursor: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .tab.on { background: var(--gold); color: #000; }
+
+    .tab-panel { display: none; }
+    .tab-panel.on { display: block; }
+
+    .pkg { margin-bottom: 60px; }
+    .pkg-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px; letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+    .pkg-tags {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px;
+    }
+    .pkg-tag {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); padding: 4px 11px;
+      background: rgba(255,255,255,0.04); border-radius: 100px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+    }
+    .pcard {
+      background: var(--card);
+      border-left: 3px solid var(--gold-dim);
+      border-top: 1px solid transparent;
+      border-radius: 5px; padding: 28px 24px;
+      position: relative;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+    .pcard:hover {
+      border-left-color: var(--gold);
+      box-shadow: -5px 0 28px rgba(245,197,24,0.12), 0 12px 40px rgba(0,0,0,0.45);
+    }
+    .pcard.hot {
+      border-left-color: var(--gold);
+      border-top-color: var(--gold);
+      box-shadow: 0 -5px 24px rgba(245,197,24,0.14);
+    }
+    .badge-hot {
+      position: absolute; top: 0; right: 18px;
+      background: var(--gold); color: #000;
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 0 0 5px 5px;
+    }
+    .badge-val {
+      position: absolute; top: 0; right: 18px;
+      background: #000; color: var(--gold);
+      border: 1px solid rgba(245,197,24,0.55);
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 0 0 5px 5px;
+    }
+    .plabel {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 9px;
+    }
+    .pprice {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 46px; color: var(--gold);
+      line-height: 1; margin-bottom: 24px;
+      letter-spacing: 0.02em;
+      min-height: 46px;
+    }
+    .pprice small { font-size: 22px; }
+    .btn-book {
+      display: block; width: 100%;
+      padding: 11px; border-radius: 4px;
+      background: transparent;
+      border: 1px solid rgba(245,197,24,0.28);
+      color: var(--gold); font-size: 11px;
+      font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; text-decoration: none;
+      text-align: center;
+      transition: background 0.15s, border-color 0.15s;
+      cursor: none;
+    }
+    .btn-book:hover { background: rgba(245,197,24,0.1); border-color: var(--gold); }
+
+    .free-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 18px; padding: 10px 18px;
+      background: rgba(245,197,24,0.07);
+      border: 1px solid rgba(245,197,24,0.22);
+      border-radius: 100px;
+      font-size: 12px; color: var(--gold);
+    }
+
+    /* ===== MERCH ===== */
+    .merch {
+      padding: 148px 0;
+      position: relative; overflow: hidden;
+    }
+    .merch-ghost {
+      position: absolute; top: 20px; right: -16px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(110px, 17vw, 250px);
+      color: rgba(255,255,255,0.022);
+      line-height: 1; pointer-events: none;
+      user-select: none; letter-spacing: -0.04em;
+    }
+    .merch-head { margin-bottom: 56px; }
+    .merch-head h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(52px, 7.5vw, 108px);
+      line-height: 0.88;
+    }
+    .merch-head p { font-size: 15px; color: var(--muted); margin-top: 10px; }
+
+    .merch-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px; min-height: 280px;
+    }
+    .mcard {
+      background: var(--card); border-radius: 5px;
+      overflow: hidden;
+      transition: transform 0.2s var(--ease-out), box-shadow 0.2s;
+    }
+    .mcard:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 56px rgba(0,0,0,0.55), 0 0 24px rgba(245,197,24,0.08);
+    }
+    .mcard-img {
+      position: relative; overflow: hidden; aspect-ratio: 1;
+      background: #141414;
+      border-bottom: 1px solid rgba(245, 197, 24, 0.1);
+    }
+    .mcard-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.5s var(--ease-out);
+      display: block;
+    }
+    .mcard:hover .mcard-img img { transform: scale(1.07); }
+    .mcard-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.65));
+    }
+    .mcard-placeholder {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 8px; text-align: center; padding: 12px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px; letter-spacing: 0.04em;
+      color: rgba(245, 197, 24, 0.55);
+      background: radial-gradient(circle at 50% 40%, rgba(245,197,24,0.06), transparent 70%);
+    }
+    .mcard-body { padding: 16px; }
+    .mcard-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 21px; letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+    .mcard-price {
+      font-size: 14px; font-weight: 600;
+      color: var(--gold); margin-bottom: 14px;
+    }
+    .btn-order {
+      display: block; width: 100%;
+      padding: 10px; border-radius: 4px;
+      background: rgba(245,197,24,0.07);
+      border: 1px solid rgba(245,197,24,0.22);
+      color: var(--gold); font-size: 10px;
+      font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; text-decoration: none;
+      text-align: center; cursor: none;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .btn-order:hover { background: rgba(245,197,24,0.15); border-color: var(--gold); }
+
+    .merch-note {
+      font-size: 13px; color: var(--muted);
+      text-align: center; margin-top: 28px;
+    }
+
+    /* skeleton */
+    .skel {
+      background: var(--card); border-radius: 5px;
+    }
+    .skel-inner {
+      aspect-ratio: 1;
+      background: linear-gradient(90deg, #1a1a1a 25%, #222 50%, #1a1a1a 75%);
+      background-size: 200% 100%;
+      animation: sklAnim 1.4s infinite;
+    }
+    @keyframes sklAnim {
+      from { background-position: 200% 0; }
+      to   { background-position: -200% 0; }
+    }
+    .skel-body { padding: 16px; }
+    .skel-line {
+      height: 12px; border-radius: 3px; margin-bottom: 8px;
+      background: linear-gradient(90deg, #1a1a1a 25%, #222 50%, #1a1a1a 75%);
+      background-size: 200% 100%;
+      animation: sklAnim 1.4s infinite;
+    }
+    .skel-line.short { width: 55%; }
+
+    /* ===== CONTACT ===== */
+    .contact {
+      padding: 148px 0;
+      position: relative; overflow: hidden;
+    }
+    .contact-ghost {
+      position: absolute; top: 20px; left: -16px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(110px, 17vw, 250px);
+      color: rgba(255,255,255,0.022);
+      line-height: 1; pointer-events: none;
+      user-select: none; letter-spacing: -0.04em;
+    }
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: start;
+    }
+    .contact-left h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(52px, 6.5vw, 96px);
+      line-height: 0.88; letter-spacing: 0.03em;
+      margin-bottom: 36px;
+    }
+    .cbtns { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 40px; }
+    .cbtn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 15px 28px; border-radius: 4px;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+    .cbtn-email {
+      background: var(--gold); color: #000;
+    }
+    .cbtn-email:hover {
+      box-shadow: 0 0 36px rgba(245,197,24,0.4);
+      transform: translateY(-2px);
+    }
+    .cbtn-wa {
+      background: rgba(37,211,102,0.1); color: #25D366;
+      border: 1px solid rgba(37,211,102,0.28);
+    }
+    .cbtn-wa:hover { background: rgba(37,211,102,0.18); transform: translateY(-2px); }
+
+    .socials { display: flex; flex-wrap: wrap; gap: 12px; }
+    .slink {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 100px;
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 0.05em; text-decoration: none;
+      color: rgba(255,255,255,0.7);
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+    .slink:hover {
+      border-color: var(--gold); color: var(--gold);
+      background: rgba(245,197,24,0.05);
+    }
+    .slink svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* referral */
+    .referral {
+      background: var(--gold); border-radius: 7px;
+      padding: 44px 40px; position: relative; overflow: hidden;
+    }
+    .referral::after {
+      content: '75%';
+      position: absolute; bottom: -24px; right: 10px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 120px; color: rgba(0,0,0,0.1);
+      line-height: 1; pointer-events: none;
+      user-select: none; letter-spacing: -0.04em;
+    }
+    .referral h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px; line-height: 0.88;
+      color: #000; letter-spacing: 0.03em; margin-bottom: 16px;
+    }
+    .referral p {
+      font-size: 15px; line-height: 1.65;
+      color: rgba(0,0,0,0.65); margin-bottom: 32px;
+      max-width: 340px;
+    }
+    .btn-ref {
+      display: inline-flex; align-items: center; gap: 9px;
+      padding: 14px 30px; background: #000;
+      color: var(--gold); font-size: 11px;
+      font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .btn-ref:hover { background: #1a1a1a; transform: translateY(-2px); }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid rgba(245,197,24,0.08);
+      padding: 72px 32px 44px;
+      text-align: center;
+    }
+    .ft-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(36px, 5.5vw, 68px);
+      color: var(--gold); letter-spacing: 0.05em;
+      display: block; margin-bottom: 8px;
+    }
+    .ft-tag { font-size: 13px; color: var(--muted); margin-bottom: 36px; }
+    .ft-nav {
+      display: flex; justify-content: center;
+      flex-wrap: wrap; gap: 32px;
+      list-style: none; margin-bottom: 36px;
+    }
+    .ft-nav a {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.35); text-decoration: none;
+      transition: color 0.15s;
+    }
+    .ft-nav a:hover { color: var(--gold); }
+    .ft-copy { font-size: 12px; color: rgba(255,255,255,0.18); }
+
+    /* ===== REDUCED MOTION ===== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1100px) {
+      .merch-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 900px) {
+      .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 52px; }
+      .merch-grid { grid-template-columns: repeat(2, 1fr); }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .nav-links, .btn-nav { display: none; }
+      .ham { display: flex; }
+      .mob-nav { display: block; }
+      .container { padding: 0 20px; }
+      .divider { margin: 0 20px; }
+    }
+    @media (max-width: 520px) {
+      .cards { grid-template-columns: 1fr; }
+      .hero-btns { flex-direction: column; }
+      .btn-gold, .btn-ghost { width: 100%; justify-content: center; }
+      .merch-grid { grid-template-columns: repeat(2, 1fr); }
+      .cbtns { flex-direction: column; }
+      .cbtn { justify-content: center; }
+    }
+    @media (max-width: 375px) {
+      .hero-name, .hero-fitness { font-size: 60px; }
+      .merch-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- scroll progress -->
+  <div id="progress-bar" aria-hidden="true"></div>
+
+  <!-- film grain -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- custom cursor -->
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+  <div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
+
+  <!-- ═══════════════════════════════════════ NAV -->
+  <nav id="nav" role="navigation" aria-label="Main navigation">
+    <a href="#" class="nav-logo" aria-label="Joe Hardy Fitness — home">JOE HARDY FITNESS</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#merch">Shop</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="btn-nav">Book Now</a>
+    <button class="ham" id="ham" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mob-nav" id="mob-nav" aria-hidden="true">
+    <ul>
+      <li><a href="#about"   class="mob-link">About</a></li>
+      <li><a href="#pricing" class="mob-link">Pricing</a></li>
+      <li><a href="#merch"   class="mob-link">Shop</a></li>
+      <li><a href="#contact" class="mob-link">Contact</a></li>
+      <li><a href="#contact" class="btn-nav mob-link">Book Now</a></li>
+    </ul>
+  </div>
+
+  <!-- ═══════════════════════════════════════ HERO -->
+  <section class="hero" aria-label="Hero">
+    <!--
+      VIDEO BACKGROUND
+      Download from: https://www.pexels.com/video/dark-gym-workout-with-modern-equipment-34708346/
+      Save as: videos/hero.mp4  (create a videos/ folder in the project root)
+      The video will fade in automatically once it loads.
+    -->
+    <video
+      class="hero-video"
+      id="hero-video"
+      muted
+      loop
+      playsinline
+      preload="none"
+      aria-hidden="true"
+    >
+      <source data-src="./videos/hero.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay" aria-hidden="true"></div>
+
+    <div class="blobs" aria-hidden="true">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+    <div class="hero-inner">
+      <div class="hero-chip">
+        <span class="hero-chip-dot" aria-hidden="true"></span>
+        Personal Training &middot; Online &amp; In Person
+      </div>
+      <h1 class="hero-h1">
+        <span class="hero-name">JOE HARDY</span>
+        <span class="hero-fitness">FITNESS</span>
+      </h1>
+      <p class="hero-sub">Get Fit, Stronger &amp; Motivated!</p>
+      <div class="hero-btns">
+        <a href="#pricing" class="btn-gold">
+          View Packages
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+            <path d="M3 7.5h9M9 4l3.5 3.5L9 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="#merch" class="btn-ghost">Shop Merch</a>
+      </div>
+      <div class="hero-rule" aria-hidden="true"></div>
+    </div>
+    <div class="hero-scroll" aria-hidden="true">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ TICKER -->
+  <div class="ticker" aria-hidden="true" role="presentation">
+    <div class="ticker-track" id="ticker-track"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ ABOUT -->
+  <section class="about" id="about" aria-labelledby="about-h">
+    <div class="about-ghost" aria-hidden="true">01</div>
+    <div class="container">
+      <div class="about-grid">
+
+        <div class="about-img-wrap fade-up">
+          <div class="img-frame">
+            <div class="img-clip">
+              <!-- REPLACE: swap src with Joe's photo -->
+              <img
+                src="https://placehold.co/500x600/181818/F5C518?text=Joe+Hardy"
+                alt="Joe Hardy — certified personal trainer"
+                width="500" height="600"
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="about-text fade-up" style="transition-delay:0.18s">
+          <div class="eyebrow">01 / About</div>
+          <h2 id="about-h">YOUR<br>COACH</h2>
+          <!-- REPLACE: Joe to personalise this bio -->
+          <p>Joe Hardy is a certified personal trainer dedicated to helping you build muscle, burn fat, and stay motivated — whether you train online or face to face.</p>
+          <div class="chips">
+            <div class="chip"><span class="chip-tick" aria-hidden="true">✓</span> Tailored Workout Plans</div>
+            <div class="chip"><span class="chip-tick" aria-hidden="true">✓</span> Nutrition Guidance</div>
+            <div class="chip"><span class="chip-tick" aria-hidden="true">✓</span> Accountability &amp; Motivation</div>
+            <!-- ADD more certs here -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════ PRICING -->
+  <section class="pricing" id="pricing" aria-labelledby="pricing-h">
+    <div class="pricing-ghost" aria-hidden="true">02</div>
+    <div class="container">
+
+      <div class="pricing-head fade-up">
+        <div class="eyebrow" style="justify-content:center">02 / Pricing</div>
+        <h2 id="pricing-h">PACKAGES</h2>
+        <p>Choose the plan that fits your goals.</p>
+      </div>
+
+      <div class="tabs fade-up" role="tablist" aria-label="Training type">
+        <button class="tab on" id="t-ip" role="tab" aria-selected="true"  aria-controls="p-ip">In Person</button>
+        <button class="tab"    id="t-ol" role="tab" aria-selected="false" aria-controls="p-ol">Online</button>
+      </div>
+
+      <!-- ── IN PERSON ── -->
+      <div class="tab-panel on" id="p-ip" role="tabpanel" aria-labelledby="t-ip">
+
+        <div class="pkg fade-up">
+          <div class="pkg-label">1:1 In Person Personal Training</div>
+          <div class="pkg-tags">
+            <span class="pkg-tag">Tailored Workout Plans</span>
+            <span class="pkg-tag">Nutrition Guidance</span>
+            <span class="pkg-tag">Accountability &amp; Motivation</span>
+          </div>
+          <div class="cards">
+            <div class="pcard fade-up">
+              <div class="plabel">Per Session</div>
+              <div class="pprice" id="ip-1to1-ps">£40</div>
+              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+            <div class="pcard fade-up" style="transition-delay:.06s">
+              <div class="plabel">Monthly</div>
+              <div class="pprice" id="ip-1to1-mo">£150<small>/mo</small></div>
+              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+            <div class="pcard hot fade-up" style="transition-delay:.12s">
+              <div class="badge-hot">Most Popular ★</div>
+              <div class="plabel">3 Months</div>
+              <div class="pprice" id="ip-1to1-3m">£400</div>
+              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+            <div class="pcard fade-up" style="transition-delay:.18s">
+              <div class="badge-val">Best Value</div>
+              <div class="plabel">Yearly Package</div>
+              <div class="pprice" id="ip-1to1-yr">£1,400</div>
+              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="pkg fade-up">
+          <div class="pkg-label">Group Sessions</div>
+          <div class="cards" style="grid-template-columns:repeat(auto-fit,minmax(210px,260px));max-width:560px">
+            <div class="pcard fade-up">
+              <div class="plabel">Per Session</div>
+              <div class="pprice" id="ip-gr-ps">£10</div>
+              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+            <div class="pcard fade-up" style="transition-delay:.06s">
+              <div class="plabel">Monthly</div>
+              <div class="pprice" id="ip-gr-mo">£35<small>/mo</small></div>
+              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+          </div>
+          <div class="free-chip">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="5.5" stroke="#F5C518" stroke-width="1.1"/><path d="M6.5 4v3l1.5 1.2" stroke="#F5C518" stroke-width="1.1" stroke-linecap="round"/></svg>
+            + FREE group session for all registered members
+          </div>
+        </div>
+
+        <div class="pkg fade-up">
+          <div class="pkg-label">Couple Package</div>
+          <div class="cards">
+            <div class="pcard fade-up">
+              <div class="plabel">Per Session</div>
+              <div class="pprice" id="ip-cp-ps">£70</div>
+              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+            <div class="pcard fade-up" style="transition-delay:.06s">
+              <div class="plabel">Monthly <span style="font-size:9px;opacity:.6">(per person)</span></div>
+              <!-- REPLACE: confirm this monthly per-person price -->
+              <div class="pprice" id="ip-cp-mo">£25<small>/mo</small></div>
+              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+            <div class="pcard hot fade-up" style="transition-delay:.12s">
+              <div class="badge-hot">Most Popular ★</div>
+              <div class="plabel">3 Months</div>
+              <div class="pprice" id="ip-cp-3m">£650</div>
+              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+            <div class="pcard fade-up" style="transition-delay:.18s">
+              <div class="badge-val">Best Value</div>
+              <div class="plabel">Yearly Package</div>
+              <div class="pprice" id="ip-cp-yr">£2,400</div>
+              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /p-ip -->
+
+      <!-- ── ONLINE ── -->
+      <div class="tab-panel" id="p-ol" role="tabpanel" aria-labelledby="t-ol">
+
+        <div class="pkg fade-up">
+          <div class="pkg-label">1:1 Online Personal Training</div>
+          <div class="pkg-tags">
+            <span class="pkg-tag">Tailored Workout Plans</span>
+            <span class="pkg-tag">Nutrition Guidance</span>
+            <span class="pkg-tag">Accountability &amp; Motivation</span>
+          </div>
+          <div class="cards">
+            <div class="pcard fade-up">
+              <div class="plabel">Per Session</div>
+              <div class="pprice" id="ol-1to1-ps">£25</div>
+              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+            <div class="pcard fade-up" style="transition-delay:.06s">
+              <div class="plabel">Monthly</div>
+              <div class="pprice" id="ol-1to1-mo">£90<small>/mo</small></div>
+              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+            <div class="pcard hot fade-up" style="transition-delay:.12s">
+              <div class="badge-hot">Most Popular ★</div>
+              <div class="plabel">3 Months</div>
+              <div class="pprice" id="ol-1to1-3m">£250</div>
+              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+            <div class="pcard fade-up" style="transition-delay:.18s">
+              <div class="badge-val">Best Value</div>
+              <div class="plabel">Yearly Package</div>
+              <div class="pprice" id="ol-1to1-yr">£800</div>
+              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="pkg fade-up">
+          <div class="pkg-label">Online Group Sessions</div>
+          <div class="cards" style="grid-template-columns:repeat(auto-fit,minmax(210px,260px));max-width:560px">
+            <div class="pcard fade-up">
+              <div class="plabel">Per Session</div>
+              <div class="pprice" id="ol-gr-ps">£10</div>
+              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+            <div class="pcard fade-up" style="transition-delay:.06s">
+              <div class="plabel">Monthly</div>
+              <div class="pprice" id="ol-gr-mo">£35<small>/mo</small></div>
+              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+          </div>
+          <div class="free-chip">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="5.5" stroke="#F5C518" stroke-width="1.1"/><path d="M6.5 4v3l1.5 1.2" stroke="#F5C518" stroke-width="1.1" stroke-linecap="round"/></svg>
+            + FREE group session for all registered members
+          </div>
+        </div>
+
+        <div class="pkg fade-up">
+          <div class="pkg-label">Couple Online Package</div>
+          <div class="cards">
+            <div class="pcard fade-up">
+              <div class="plabel">Per Session</div>
+              <div class="pprice" id="ol-cp-ps">£40</div>
+              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+            <div class="pcard fade-up" style="transition-delay:.06s">
+              <div class="plabel">Monthly</div>
+              <div class="pprice" id="ol-cp-mo">£150<small>/mo</small></div>
+              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+            <div class="pcard hot fade-up" style="transition-delay:.12s">
+              <div class="badge-hot">Most Popular ★</div>
+              <div class="plabel">3 Months</div>
+              <div class="pprice" id="ol-cp-3m">£400</div>
+              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+            <div class="pcard fade-up" style="transition-delay:.18s">
+              <div class="badge-val">Best Value</div>
+              <div class="plabel">Yearly Package</div>
+              <div class="pprice" id="ol-cp-yr">£1,400</div>
+              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book">Book Now</a>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /p-ol -->
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════ MERCH -->
+  <section class="merch" id="merch" aria-labelledby="merch-h">
+    <div class="merch-ghost" aria-hidden="true">03</div>
+    <div class="container">
+
+      <div class="merch-head fade-up">
+        <div class="eyebrow">03 / Shop</div>
+        <h2 id="merch-h">GEAR</h2>
+        <p>Rep the brand. All items available in multiple sizes.</p>
+      </div>
+
+      <div class="merch-grid" id="merch-grid">
+        <!-- skeletons while loading -->
+        <div class="skel"><div class="skel-inner"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line short"></div></div></div>
+        <div class="skel"><div class="skel-inner"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line short"></div></div></div>
+        <div class="skel"><div class="skel-inner"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line short"></div></div></div>
+        <div class="skel"><div class="skel-inner"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line short"></div></div></div>
+        <div class="skel"><div class="skel-inner"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line short"></div></div></div>
+      </div>
+
+      <p class="merch-note">Message us to check availability and sizes. Orders fulfilled directly.</p>
+      <!-- FUTURE: replace mailto buttons with Shopify Buy Button or Stripe Payment Links -->
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════ CONTACT + REFERRAL -->
+  <section class="contact" id="contact" aria-labelledby="contact-h">
+    <div class="contact-ghost" aria-hidden="true">04</div>
+    <div class="container">
+      <div class="contact-grid">
+
+        <div class="contact-left fade-up">
+          <div class="eyebrow">04 / Contact</div>
+          <h2 id="contact-h">READY<br>TO START?</h2>
+          <div class="cbtns">
+            <a href="mailto:fitflexcity@gmail.com" class="cbtn cbtn-email">
+              <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true">
+                <path d="M1.5 3.5h14v10h-14v-10zm0 0 7 6 7-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Email Joe
+            </a>
+            <a href="https://wa.me/447432846353" class="cbtn cbtn-wa" target="_blank" rel="noopener noreferrer">
+              <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true">
+                <path d="M8.5 1A7.5 7.5 0 0 1 16 8.5c0 4.14-3.36 7.5-7.5 7.5a7.47 7.47 0 0 1-3.6-.92L1 16l1.01-3.85A7.47 7.47 0 0 1 1 8.5 7.5 7.5 0 0 1 8.5 1z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6 6.3s.35-1.3 1.7-1.3S9.5 6.3 9.5 6.3 9.5 7.6 8.2 7.6 6.9 7.6 6.9 8.9 7.6 10.7 9 10.7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              </svg>
+              WhatsApp
+            </a>
+          </div>
+          <div class="socials">
+            <!-- REPLACE: instagram URL -->
+            <a href="#" class="slink" aria-label="Follow Joe on Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              Instagram
+            </a>
+            <!-- REPLACE: tiktok URL -->
+            <a href="#" class="slink" aria-label="Follow Joe on TikTok">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.77 0 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0 0 12.68 6.34 6.34 0 0 0 6.33-6.34V8.69a8.27 8.27 0 0 0 4.83 1.54V6.78a4.85 4.85 0 0 1-1.06-.09z"/></svg>
+              TikTok
+            </a>
+            <!-- REPLACE: facebook URL -->
+            <a href="#" class="slink" aria-label="Follow Joe on Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+              Facebook
+            </a>
+          </div>
+        </div>
+
+        <div class="referral fade-up" style="transition-delay:0.18s">
+          <h3>REFER<br>A FRIEND</h3>
+          <p>Get 75% off your next monthly subscription when you refer a friend who signs up.</p>
+          <a href="mailto:fitflexcity@gmail.com?subject=Referral" class="btn-ref">
+            Share the link
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M2 6.5h9M8 3l3.5 3.5L8 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ FOOTER -->
+  <footer role="contentinfo">
+    <span class="ft-logo">JOE HARDY FITNESS</span>
+    <p class="ft-tag">Get Fit, Stronger &amp; Motivated!</p>
+    <nav aria-label="Footer navigation">
+      <ul class="ft-nav">
+        <li><a href="#about">About</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#merch">Shop</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <p class="ft-copy">&copy; <span id="year"></span> Joe Hardy Fitness. All rights reserved.</p>
+    <p class="ft-copy" style="margin-top:8px">Site by <a href="https://ai4e1.net" target="_blank" rel="noopener noreferrer" style="color:var(--gold);opacity:0.6;text-decoration:none;transition:opacity 0.15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">AI4E1 Ltd</a></p>
+  </footer>
+
+  <script>
+    /* ── YEAR ── */
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    /* ── SCROLL PROGRESS ── */
+    const prog = document.getElementById('progress-bar');
+    function onScroll() {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      const pct = max > 0 ? window.scrollY / max : 0;
+      prog.style.transform = 'scaleX(' + pct + ')';
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    /* ── SOCIAL LINKS (placeholder until Joe adds real URLs) ── */
+    document.querySelectorAll('.slink').forEach(a => {
+      if (a.getAttribute('href') === '#') {
+        a.addEventListener('click', e => e.preventDefault());
+        a.setAttribute('aria-disabled', 'true');
+        a.style.opacity = '0.5';
+      }
+    });
+
+    /* ── NAV ── */
+    const nav = document.getElementById('nav');
+    const hero = document.querySelector('.hero');
+    new IntersectionObserver(([e]) => nav.classList.toggle('solid', !e.isIntersecting), { threshold: 0.05 }).observe(hero);
+
+    /* ── HAMBURGER ── */
+    const ham = document.getElementById('ham');
+    const mobNav = document.getElementById('mob-nav');
+    ham.addEventListener('click', () => {
+      const open = ham.classList.toggle('open');
+      ham.setAttribute('aria-expanded', open);
+      mobNav.classList.toggle('open', open);
+      mobNav.setAttribute('aria-hidden', !open);
+    });
+    document.querySelectorAll('.mob-link').forEach(l => l.addEventListener('click', () => {
+      ham.classList.remove('open');
+      ham.setAttribute('aria-expanded', false);
+      mobNav.classList.remove('open');
+      mobNav.setAttribute('aria-hidden', true);
+    }));
+
+    /* ── CURSOR ── */
+    const cur = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    if (!('ontouchstart' in window)) {
+      document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+      });
+      (function loop() {
+        rx += (mx - rx) * 0.11; ry += (my - ry) * 0.11;
+        ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+        requestAnimationFrame(loop);
+      })();
+      document.querySelectorAll('a, button, .pcard, .mcard').forEach(el => {
+        el.addEventListener('mouseenter', () => ring.classList.add('big'));
+        el.addEventListener('mouseleave', () => ring.classList.remove('big'));
+      });
+    } else {
+      cur.style.display = 'none'; ring.style.display = 'none';
+    }
+
+    /* ── TICKER ── */
+    const phrases = ['GET FIT','STRONGER','MOTIVATED','ONLINE & IN PERSON','CERTIFIED PT',
+                     'TAILORED PLANS','NUTRITION GUIDANCE','BUILD MUSCLE','BURN FAT','JOIN JOE HARDY'];
+    const track = document.getElementById('ticker-track');
+    const doubled = [...phrases, ...phrases];
+    track.innerHTML = doubled.map(p =>
+      `<span class="ticker-item">${p}<span class="ticker-sep"></span></span>`
+    ).join('');
+
+    /* ── FADE UP ON SCROLL ── */
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+    /* ── CARD TILT ── */
+    document.querySelectorAll('.pcard, .mcard').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        const cx = r.width / 2, cy = r.height / 2;
+        const dx = e.clientX - r.left - cx, dy = e.clientY - r.top - cy;
+        card.style.transform = `perspective(900px) rotateX(${-dy/cy*5}deg) rotateY(${dx/cx*5}deg) translateY(-3px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transition = 'transform 0.45s cubic-bezier(0.16,1,0.3,1), border-color 0.15s, box-shadow 0.15s';
+        card.style.transform = '';
+        setTimeout(() => card.style.transition = '', 450);
+      });
+    });
+
+    /* ── PRICING TABS ── */
+    document.querySelectorAll('.tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(b => { b.classList.remove('on'); b.setAttribute('aria-selected', false); });
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('on'));
+        btn.classList.add('on'); btn.setAttribute('aria-selected', true);
+        document.getElementById(btn.getAttribute('aria-controls')).classList.add('on');
+      });
+    });
+
+    /* ── DATA ── */
+    const fallback = {
+      ip_1to1:  { ps: '£40',  mo: '£150/mo', m3: '£400',   yr: '£1,400' },
+      ip_group: { ps: '£10',  mo: '£35/mo' },
+      ip_cp:    { ps: '£70',  mo: '£25/mo',  m3: '£650',   yr: '£2,400' },
+      ol_1to1:  { ps: '£25',  mo: '£90/mo',  m3: '£250',   yr: '£800'   },
+      ol_group: { ps: '£10',  mo: '£35/mo' },
+      ol_cp:    { ps: '£40',  mo: '£150/mo', m3: '£400',   yr: '£1,400' },
+    };
+
+    function fill(id, val) {
+      const el = document.getElementById(id); if (!el) return;
+      const parts = String(val).split('/');
+      el.innerHTML = parts.length > 1
+        ? parts[0] + '<small>/' + parts[1] + '</small>'
+        : val;
+    }
+
+    async function loadPricing() {
+      const map = [
+        ['/_data/pricing_in_person_1to1.json',    d => { fill('ip-1to1-ps', d.per_session); fill('ip-1to1-mo', d.monthly); fill('ip-1to1-3m', d.three_months); fill('ip-1to1-yr', d.yearly); },    () => { fill('ip-1to1-ps', fallback.ip_1to1.ps); fill('ip-1to1-mo', fallback.ip_1to1.mo); fill('ip-1to1-3m', fallback.ip_1to1.m3); fill('ip-1to1-yr', fallback.ip_1to1.yr); }],
+        ['/_data/pricing_in_person_group.json',   d => { fill('ip-gr-ps', d.per_session); fill('ip-gr-mo', d.monthly); },                                                                           () => { fill('ip-gr-ps', fallback.ip_group.ps); fill('ip-gr-mo', fallback.ip_group.mo); }],
+        ['/_data/pricing_in_person_couple.json',  d => { fill('ip-cp-ps', d.per_session); fill('ip-cp-mo', d.monthly); fill('ip-cp-3m', d.three_months); fill('ip-cp-yr', d.yearly); },            () => { fill('ip-cp-ps', fallback.ip_cp.ps); fill('ip-cp-mo', fallback.ip_cp.mo); fill('ip-cp-3m', fallback.ip_cp.m3); fill('ip-cp-yr', fallback.ip_cp.yr); }],
+        ['/_data/pricing_online_1to1.json',       d => { fill('ol-1to1-ps', d.per_session); fill('ol-1to1-mo', d.monthly); fill('ol-1to1-3m', d.three_months); fill('ol-1to1-yr', d.yearly); },   () => { fill('ol-1to1-ps', fallback.ol_1to1.ps); fill('ol-1to1-mo', fallback.ol_1to1.mo); fill('ol-1to1-3m', fallback.ol_1to1.m3); fill('ol-1to1-yr', fallback.ol_1to1.yr); }],
+        ['/_data/pricing_online_group.json',      d => { fill('ol-gr-ps', d.per_session); fill('ol-gr-mo', d.monthly); },                                                                          () => { fill('ol-gr-ps', fallback.ol_group.ps); fill('ol-gr-mo', fallback.ol_group.mo); }],
+        ['/_data/pricing_online_couple.json',     d => { fill('ol-cp-ps', d.per_session); fill('ol-cp-mo', d.monthly); fill('ol-cp-3m', d.three_months); fill('ol-cp-yr', d.yearly); },           () => { fill('ol-cp-ps', fallback.ol_cp.ps); fill('ol-cp-mo', fallback.ol_cp.mo); fill('ol-cp-3m', fallback.ol_cp.m3); fill('ol-cp-yr', fallback.ol_cp.yr); }],
+      ];
+      await Promise.all(map.map(async ([url, apply, applyFallback]) => {
+        try { const r = await fetch(url); if (!r.ok) throw 0; apply(await r.json()); }
+        catch { applyFallback(); }
+      }));
+    }
+
+    /* ── MERCH ── */
+    const merchDefault = [
+      { name: 'T-Shirt',   price: '' },
+      { name: 'Shorts',    price: '' },
+      { name: 'Tracksuit', price: '' },
+      { name: 'Cap',       price: '' },
+      { name: 'Socks',     price: '' },
+    ];
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+    }
+
+    function renderMerch(items) {
+      const grid = document.getElementById('merch-grid');
+      grid.innerHTML = items.map(item => {
+        const enc = encodeURIComponent(item.name);
+        const safeName = escapeHtml(item.name);
+        const priceHtml = item.price
+          ? `<div class="mcard-price">${escapeHtml(item.price)}</div>`
+          : `<div class="mcard-price" style="color:var(--muted);font-weight:400">Price on request</div>`;
+        /* REPLACE: once item.image is set via the CMS this renders the real product photo instead of the placeholder */
+        const imgHtml = item.image
+          ? `<img src="${escapeHtml(item.image)}" alt="${safeName} — Joe Hardy Fitness" width="300" height="300" loading="lazy">`
+          : `<div class="mcard-placeholder" aria-hidden="true"><span>${safeName}</span><small style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7">Photo coming soon</small></div>`;
+        return `<div class="mcard fade-up">
+          <div class="mcard-img">
+            ${imgHtml}
+            <div class="mcard-overlay"></div>
+          </div>
+          <div class="mcard-body">
+            <div class="mcard-name">${safeName}</div>
+            ${priceHtml}
+            <a href="mailto:fitflexcity@gmail.com?subject=Merch%20Enquiry%20%E2%80%93%20${enc}" class="btn-order">Order Now</a>
+          </div>
+        </div>`;
+      }).join('');
+      grid.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+      /* re-attach tilt to new cards */
+      grid.querySelectorAll('.mcard').forEach(card => {
+        card.addEventListener('mousemove', e => {
+          const r = card.getBoundingClientRect();
+          const cx = r.width/2, cy = r.height/2;
+          card.style.transform = `perspective(900px) rotateX(${-(e.clientY-r.top-cy)/cy*4}deg) rotateY(${(e.clientX-r.left-cx)/cx*4}deg) translateY(-3px)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transition = 'transform 0.45s cubic-bezier(0.16,1,0.3,1)';
+          card.style.transform = '';
+          setTimeout(() => card.style.transition = '', 450);
+        });
+        if (!('ontouchstart' in window)) {
+          card.addEventListener('mouseenter', () => ring.classList.add('big'));
+          card.addEventListener('mouseleave', () => ring.classList.remove('big'));
+        }
+      });
+    }
+
+    async function loadMerch() {
+      const slugs = ['t-shirt', 'shorts', 'tracksuit', 'cap', 'socks'];
+      try {
+        const results = await Promise.all(
+          slugs.map((s, i) =>
+            fetch('/_data/merch/' + s + '.json')
+              .then(r => r.ok ? r.json() : null)
+              .catch(() => null)
+          )
+        );
+        const items = results.map((d, i) => ({
+          name:  (d && d.name)  || merchDefault[i].name,
+          price: (d && d.price) || '',
+          image: (d && d.image) || null,
+        }));
+        renderMerch(items);
+      } catch {
+        renderMerch(merchDefault);
+      }
+    }
+
+    /* ── HERO VIDEO ── */
+    const heroVid = document.getElementById('hero-video');
+    if (heroVid) {
+      const conn = navigator.connection || navigator.webkitConnection || navigator.mozConnection;
+      const lowData = conn && (conn.saveData || /2g/.test(conn.effectiveType || ''));
+      if (!lowData) {
+        const showVideo = () => heroVid.classList.add('loaded');
+        heroVid.addEventListener('canplaythrough', showVideo, { once: true });
+        const source = heroVid.querySelector('source[data-src]');
+        source.src = source.getAttribute('data-src');
+        heroVid.load();
+        heroVid.play().catch(() => {});
+      }
+    }
+
+    /* ── INIT ── */
+    loadPricing();
+    loadMerch();
+  </script>
+</body>
+</html>
