@@ -1366,14 +1366,55 @@
     }
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    /* ── SOCIAL LINKS (placeholder until Joe adds real URLs) ── */
-    document.querySelectorAll('.slink').forEach(a => {
-      if (a.getAttribute('href') === '#') {
-        a.addEventListener('click', e => e.preventDefault());
-        a.setAttribute('aria-disabled', 'true');
-        a.style.opacity = '0.5';
+    /* ── SITE SETTINGS (email / phone / socials / referral, from the CMS) ── */
+    async function loadSettings() {
+      let s = null;
+      try {
+        const r = await fetch('/_data/settings.json');
+        if (r.ok) s = await r.json();
+      } catch {}
+
+      // email: rewrite every mailto: link, preserving each one's own ?subject=... query
+      if (s && s.email) {
+        document.querySelectorAll('a[href^="mailto:"]').forEach(a => {
+          const href = a.getAttribute('href');
+          const query = href.includes('?') ? href.slice(href.indexOf('?')) : '';
+          a.setAttribute('href', 'mailto:' + s.email + query);
+        });
       }
-    });
+
+      // phone: rewrite the WhatsApp link
+      if (s && s.phone) {
+        const digits = s.phone.replace(/[^\d]/g, '');
+        document.querySelectorAll('a[href^="https://wa.me/"]').forEach(a => {
+          a.setAttribute('href', 'https://wa.me/' + digits);
+        });
+      }
+
+      // socials: enable each icon only once it has a real (non "#") URL
+      const socialUrls = { Instagram: s && s.instagram, TikTok: s && s.tiktok, Facebook: s && s.facebook };
+      document.querySelectorAll('.slink').forEach(a => {
+        const label = a.getAttribute('aria-label') || '';
+        const match = Object.keys(socialUrls).find(name => label.includes(name));
+        const url = match && socialUrls[match];
+        if (url && url !== '#') {
+          a.setAttribute('href', url);
+          a.setAttribute('target', '_blank');
+          a.setAttribute('rel', 'noopener noreferrer');
+        } else {
+          a.setAttribute('href', '#');
+          a.addEventListener('click', e => e.preventDefault());
+          a.setAttribute('aria-disabled', 'true');
+          a.style.opacity = '0.5';
+        }
+      });
+
+      // referral text
+      if (s && s.referral) {
+        const refP = document.querySelector('.referral p');
+        if (refP) refP.textContent = s.referral;
+      }
+    }
 
     /* ── NAV ── */
     const nav = document.getElementById('nav');
@@ -1504,9 +1545,10 @@
       return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
     }
 
-    function renderMerch(items, shop) {
+    function renderMerch(items, shop, email) {
       const grid = document.getElementById('merch-grid');
       const shopLive = !!(shop && shop.enabled && shop.shopify_domain && shop.shopify_storefront_token);
+      const orderEmail = email || 'fitflexcity@gmail.com';
       grid.innerHTML = items.map((item, i) => {
         const enc = encodeURIComponent(item.name);
         const safeName = escapeHtml(item.name);
@@ -1519,7 +1561,7 @@
           : `<div class="mcard-placeholder" aria-hidden="true"><span>${safeName}</span><small style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7">Photo coming soon</small></div>`;
         const ctaHtml = (shopLive && item.shopify_product_id)
           ? `<div class="mcard-buybutton" id="buybutton-${i}"></div>`
-          : `<a href="mailto:fitflexcity@gmail.com?subject=Merch%20Enquiry%20%E2%80%93%20${enc}" class="btn-order">Order Now</a>`;
+          : `<a href="mailto:${orderEmail}?subject=Merch%20Enquiry%20%E2%80%93%20${enc}" class="btn-order">Order Now</a>`;
         return `<div class="mcard fade-up">
           <div class="mcard-img">
             ${imgHtml}
@@ -1634,7 +1676,7 @@
     async function loadMerch() {
       const slugs = ['t-shirt', 'shorts', 'tracksuit', 'cap', 'socks'];
       try {
-        const [results, shop] = await Promise.all([
+        const [results, shop, settings] = await Promise.all([
           Promise.all(
             slugs.map((s, i) =>
               fetch('/_data/merch/' + s + '.json')
@@ -1643,6 +1685,7 @@
             )
           ),
           fetch('/_data/shop.json').then(r => r.ok ? r.json() : null).catch(() => null),
+          fetch('/_data/settings.json').then(r => r.ok ? r.json() : null).catch(() => null),
         ]);
         const items = results.map((d, i) => ({
           name:  (d && d.name)  || merchDefault[i].name,
@@ -1650,7 +1693,7 @@
           image: (d && d.image) || null,
           shopify_product_id: (d && d.shopify_product_id) || null,
         }));
-        renderMerch(items, shop);
+        renderMerch(items, shop, settings && settings.email);
         if (shop && shop.enabled) mountShopifyBuyButtons(items, shop);
       } catch {
         renderMerch(merchDefault);
@@ -1673,6 +1716,7 @@
     }
 
     /* ── INIT ── */
+    loadSettings();
     loadPricing();
     loadMerch();
   </script>
