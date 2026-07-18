@@ -1,3 +1,1 @@
-{
-  "stripe_enabled": false
-}
+{"stripe_enabled": true}

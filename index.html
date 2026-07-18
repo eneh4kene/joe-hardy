@@ -16,7 +16,9 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Joe Hardy Fitness — Get Fit, Stronger & Motivated">
   <meta name="twitter:description" content="Personal Training Online & In Person. Tailored workout plans, nutrition guidance, and accountability with Joe Hardy.">
-  <!-- REPLACE: once Joe has a real photo, add og:image / twitter:image (and twitter:card=summary_large_image) pointing at it -->
+  <meta property="og:image" content="https://joe-hardy-fitness.netlify.app/images/joe-about.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://joe-hardy-fitness.netlify.app/images/joe-about.jpg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -649,6 +651,37 @@
       font-size: 12px; color: var(--gold);
     }
 
+    /* ── PHOTO STRIP ── */
+    .photo-strip {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: 400px;
+      overflow: hidden;
+    }
+    .photo-strip-item {
+      position: relative;
+      overflow: hidden;
+    }
+    .photo-strip-item img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      filter: brightness(0.72) saturate(0.8);
+      transition: transform 0.7s ease, filter 0.4s ease;
+      display: block;
+    }
+    .photo-strip-item:hover img {
+      transform: scale(1.05);
+      filter: brightness(0.85) saturate(0.9);
+    }
+    .photo-strip-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(to bottom, transparent 45%, rgba(0,0,0,0.55) 100%);
+    }
+    @media (max-width: 600px) {
+      .photo-strip { grid-template-columns: 1fr; height: 260px; }
+      .photo-strip-item:last-child { display: none; }
+    }
+
     /* ===== MERCH ===== */
     .merch {
       padding: 148px 0;
@@ -1029,11 +1062,11 @@
         <div class="about-img-wrap fade-up">
           <div class="img-frame">
             <div class="img-clip">
-              <!-- REPLACE: swap src with Joe's photo -->
               <img
-                src="https://placehold.co/500x600/181818/F5C518?text=Joe+Hardy"
+                src="./images/joe-about.jpg"
                 alt="Joe Hardy — certified personal trainer"
                 width="500" height="600"
+                loading="eager"
               >
             </div>
           </div>
@@ -1053,6 +1086,18 @@
         </div>
 
       </div>
+    </div>
+  </section>
+
+  <!-- ── PHOTO STRIP ── -->
+  <section class="photo-strip" aria-label="Joe Hardy training in the gym">
+    <div class="photo-strip-item">
+      <img src="./images/joe-action.jpg" alt="Joe Hardy holding a weight plate" loading="lazy">
+      <div class="photo-strip-overlay"></div>
+    </div>
+    <div class="photo-strip-item">
+      <img src="./images/joe-training.jpg" alt="Joe Hardy training with dumbbells" loading="lazy">
+      <div class="photo-strip-overlay"></div>
     </div>
   </section>
 
@@ -1087,74 +1132,46 @@
           <div class="cards">
             <div class="pcard fade-up">
               <div class="plabel">Per Session</div>
-              <div class="pprice" id="ip-1to1-ps">£40</div>
-              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book" id="book-ip-1to1-ps">Book Now</a>
+              <div class="pprice" id="ip-1to1-ps">£80</div>
+              <a href="mailto:naxyjoe999@gmail.com?subject=In%20Person%201%3A1%20Training%20Enquiry" class="btn-book" id="book-ip-1to1-ps">Book Now</a>
             </div>
             <div class="pcard fade-up" style="transition-delay:.06s">
-              <div class="plabel">Monthly</div>
-              <div class="pprice" id="ip-1to1-mo">£150<small>/mo</small></div>
-              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book" id="book-ip-1to1-mo">Book Now</a>
+              <div class="plabel">5 Sessions</div>
+              <div class="pprice" id="ip-1to1-5s">£250</div>
+              <a href="mailto:naxyjoe999@gmail.com?subject=In%20Person%201%3A1%20Training%20Enquiry" class="btn-book" id="book-ip-1to1-5s">Book Now</a>
             </div>
             <div class="pcard hot fade-up" style="transition-delay:.12s">
-              <div class="badge-hot">Most Popular ★</div>
-              <div class="plabel">3 Months</div>
-              <div class="pprice" id="ip-1to1-3m">£400</div>
-              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book" id="book-ip-1to1-3m">Book Now</a>
+              <div class="badge-hot">Best Value ★</div>
+              <div class="plabel">10 Sessions</div>
+              <div class="pprice" id="ip-1to1-10s">£400</div>
+              <a href="mailto:naxyjoe999@gmail.com?subject=In%20Person%201%3A1%20Training%20Enquiry" class="btn-book" id="book-ip-1to1-10s">Book Now</a>
             </div>
-            <div class="pcard fade-up" style="transition-delay:.18s">
-              <div class="badge-val">Best Value</div>
-              <div class="plabel">Yearly Package</div>
-              <div class="pprice" id="ip-1to1-yr">£1,400</div>
-              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book" id="book-ip-1to1-yr">Book Now</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="pkg fade-up">
-          <div class="pkg-label">Group Sessions</div>
-          <div class="cards" style="grid-template-columns:repeat(auto-fit,minmax(210px,260px));max-width:560px">
-            <div class="pcard fade-up">
-              <div class="plabel">Per Session</div>
-              <div class="pprice" id="ip-gr-ps">£10</div>
-              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book" id="book-ip-gr-ps">Book Now</a>
-            </div>
-            <div class="pcard fade-up" style="transition-delay:.06s">
-              <div class="plabel">Monthly</div>
-              <div class="pprice" id="ip-gr-mo">£35<small>/mo</small></div>
-              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book" id="book-ip-gr-mo">Book Now</a>
-            </div>
-          </div>
-          <div class="free-chip">
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="5.5" stroke="#F5C518" stroke-width="1.1"/><path d="M6.5 4v3l1.5 1.2" stroke="#F5C518" stroke-width="1.1" stroke-linecap="round"/></svg>
-            + FREE group session for all registered members
           </div>
         </div>
 
         <div class="pkg fade-up">
           <div class="pkg-label">Couple Package</div>
+          <div class="pkg-tags">
+            <span class="pkg-tag">Train Together</span>
+            <span class="pkg-tag">Shared Goals</span>
+            <span class="pkg-tag">Nutrition &amp; Lifestyle Coaching</span>
+          </div>
           <div class="cards">
             <div class="pcard fade-up">
               <div class="plabel">Per Session</div>
-              <div class="pprice" id="ip-cp-ps">£70</div>
-              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book" id="book-ip-cp-ps">Book Now</a>
+              <div class="pprice" id="ip-cp-ps">£150</div>
+              <a href="mailto:naxyjoe999@gmail.com?subject=In%20Person%20Couple%20Package%20Enquiry" class="btn-book" id="book-ip-cp-ps">Book Now</a>
             </div>
             <div class="pcard fade-up" style="transition-delay:.06s">
-              <div class="plabel">Monthly <span style="font-size:9px;opacity:.6">(per person)</span></div>
-              <!-- REPLACE: confirm this monthly per-person price -->
-              <div class="pprice" id="ip-cp-mo">£25<small>/mo</small></div>
-              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book" id="book-ip-cp-mo">Book Now</a>
+              <div class="plabel">5 Sessions</div>
+              <div class="pprice" id="ip-cp-5s">£400</div>
+              <a href="mailto:naxyjoe999@gmail.com?subject=In%20Person%20Couple%20Package%20Enquiry" class="btn-book" id="book-ip-cp-5s">Book Now</a>
             </div>
             <div class="pcard hot fade-up" style="transition-delay:.12s">
-              <div class="badge-hot">Most Popular ★</div>
-              <div class="plabel">3 Months</div>
-              <div class="pprice" id="ip-cp-3m">£650</div>
-              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book" id="book-ip-cp-3m">Book Now</a>
-            </div>
-            <div class="pcard fade-up" style="transition-delay:.18s">
-              <div class="badge-val">Best Value</div>
-              <div class="plabel">Yearly Package</div>
-              <div class="pprice" id="ip-cp-yr">£2,400</div>
-              <a href="mailto:fitflexcity@gmail.com?subject=In%20Person%20Training%20Enquiry" class="btn-book" id="book-ip-cp-yr">Book Now</a>
+              <div class="badge-hot">Best Value ★</div>
+              <div class="plabel">10 Sessions</div>
+              <div class="pprice" id="ip-cp-10s">£600</div>
+              <a href="mailto:naxyjoe999@gmail.com?subject=In%20Person%20Couple%20Package%20Enquiry" class="btn-book" id="book-ip-cp-10s">Book Now</a>
             </div>
           </div>
         </div>
@@ -1174,73 +1191,46 @@
           <div class="cards">
             <div class="pcard fade-up">
               <div class="plabel">Per Session</div>
-              <div class="pprice" id="ol-1to1-ps">£25</div>
-              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book" id="book-ol-1to1-ps">Book Now</a>
+              <div class="pprice" id="ol-1to1-ps">£50</div>
+              <a href="mailto:naxyjoe999@gmail.com?subject=Online%201%3A1%20Training%20Enquiry" class="btn-book" id="book-ol-1to1-ps">Book Now</a>
             </div>
             <div class="pcard fade-up" style="transition-delay:.06s">
-              <div class="plabel">Monthly</div>
-              <div class="pprice" id="ol-1to1-mo">£90<small>/mo</small></div>
-              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book" id="book-ol-1to1-mo">Book Now</a>
+              <div class="plabel">5 Sessions</div>
+              <div class="pprice" id="ol-1to1-5s">£200</div>
+              <a href="mailto:naxyjoe999@gmail.com?subject=Online%201%3A1%20Training%20Enquiry" class="btn-book" id="book-ol-1to1-5s">Book Now</a>
             </div>
             <div class="pcard hot fade-up" style="transition-delay:.12s">
-              <div class="badge-hot">Most Popular ★</div>
-              <div class="plabel">3 Months</div>
-              <div class="pprice" id="ol-1to1-3m">£250</div>
-              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book" id="book-ol-1to1-3m">Book Now</a>
+              <div class="badge-hot">Best Value ★</div>
+              <div class="plabel">10 Sessions</div>
+              <div class="pprice" id="ol-1to1-10s">£300</div>
+              <a href="mailto:naxyjoe999@gmail.com?subject=Online%201%3A1%20Training%20Enquiry" class="btn-book" id="book-ol-1to1-10s">Book Now</a>
             </div>
-            <div class="pcard fade-up" style="transition-delay:.18s">
-              <div class="badge-val">Best Value</div>
-              <div class="plabel">Yearly Package</div>
-              <div class="pprice" id="ol-1to1-yr">£800</div>
-              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book" id="book-ol-1to1-yr">Book Now</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="pkg fade-up">
-          <div class="pkg-label">Online Group Sessions</div>
-          <div class="cards" style="grid-template-columns:repeat(auto-fit,minmax(210px,260px));max-width:560px">
-            <div class="pcard fade-up">
-              <div class="plabel">Per Session</div>
-              <div class="pprice" id="ol-gr-ps">£10</div>
-              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book" id="book-ol-gr-ps">Book Now</a>
-            </div>
-            <div class="pcard fade-up" style="transition-delay:.06s">
-              <div class="plabel">Monthly</div>
-              <div class="pprice" id="ol-gr-mo">£35<small>/mo</small></div>
-              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book" id="book-ol-gr-mo">Book Now</a>
-            </div>
-          </div>
-          <div class="free-chip">
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="5.5" stroke="#F5C518" stroke-width="1.1"/><path d="M6.5 4v3l1.5 1.2" stroke="#F5C518" stroke-width="1.1" stroke-linecap="round"/></svg>
-            + FREE group session for all registered members
           </div>
         </div>
 
         <div class="pkg fade-up">
           <div class="pkg-label">Couple Online Package</div>
+          <div class="pkg-tags">
+            <span class="pkg-tag">Train Together</span>
+            <span class="pkg-tag">Shared Goals</span>
+            <span class="pkg-tag">Nutrition &amp; Lifestyle Coaching</span>
+          </div>
           <div class="cards">
             <div class="pcard fade-up">
               <div class="plabel">Per Session</div>
-              <div class="pprice" id="ol-cp-ps">£40</div>
-              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book" id="book-ol-cp-ps">Book Now</a>
+              <div class="pprice" id="ol-cp-ps">£80</div>
+              <a href="mailto:naxyjoe999@gmail.com?subject=Online%20Couple%20Package%20Enquiry" class="btn-book" id="book-ol-cp-ps">Book Now</a>
             </div>
             <div class="pcard fade-up" style="transition-delay:.06s">
-              <div class="plabel">Monthly</div>
-              <div class="pprice" id="ol-cp-mo">£150<small>/mo</small></div>
-              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book" id="book-ol-cp-mo">Book Now</a>
+              <div class="plabel">5 Sessions</div>
+              <div class="pprice" id="ol-cp-5s">£300</div>
+              <a href="mailto:naxyjoe999@gmail.com?subject=Online%20Couple%20Package%20Enquiry" class="btn-book" id="book-ol-cp-5s">Book Now</a>
             </div>
             <div class="pcard hot fade-up" style="transition-delay:.12s">
-              <div class="badge-hot">Most Popular ★</div>
-              <div class="plabel">3 Months</div>
-              <div class="pprice" id="ol-cp-3m">£400</div>
-              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book" id="book-ol-cp-3m">Book Now</a>
-            </div>
-            <div class="pcard fade-up" style="transition-delay:.18s">
-              <div class="badge-val">Best Value</div>
-              <div class="plabel">Yearly Package</div>
-              <div class="pprice" id="ol-cp-yr">£1,400</div>
-              <a href="mailto:fitflexcity@gmail.com?subject=Online%20Training%20Enquiry" class="btn-book" id="book-ol-cp-yr">Book Now</a>
+              <div class="badge-hot">Best Value ★</div>
+              <div class="plabel">10 Sessions</div>
+              <div class="pprice" id="ol-cp-10s">£500</div>
+              <a href="mailto:naxyjoe999@gmail.com?subject=Online%20Couple%20Package%20Enquiry" class="btn-book" id="book-ol-cp-10s">Book Now</a>
             </div>
           </div>
         </div>
@@ -1289,7 +1279,7 @@
           <div class="eyebrow">04 / Contact</div>
           <h2 id="contact-h">READY<br>TO START?</h2>
           <div class="cbtns">
-            <a href="mailto:fitflexcity@gmail.com" class="cbtn cbtn-email">
+            <a href="mailto:naxyjoe999@gmail.com" class="cbtn cbtn-email">
               <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true">
                 <path d="M1.5 3.5h14v10h-14v-10zm0 0 7 6 7-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
@@ -1314,10 +1304,9 @@
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.77 0 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0 0 12.68 6.34 6.34 0 0 0 6.33-6.34V8.69a8.27 8.27 0 0 0 4.83 1.54V6.78a4.85 4.85 0 0 1-1.06-.09z"/></svg>
               TikTok
             </a>
-            <!-- REPLACE: facebook URL -->
-            <a href="#" class="slink" aria-label="Follow Joe on Facebook">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-              Facebook
+            <a href="#" class="slink" aria-label="Follow Joe on YouTube">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.96-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#0a0a0a"/></svg>
+              YouTube
             </a>
           </div>
         </div>
@@ -1325,7 +1314,7 @@
         <div class="referral fade-up" style="transition-delay:0.18s">
           <h3>REFER<br>A FRIEND</h3>
           <p>Get 75% off your next monthly subscription when you refer a friend who signs up.</p>
-          <a href="mailto:fitflexcity@gmail.com?subject=Referral" class="btn-ref">
+          <a href="mailto:naxyjoe999@gmail.com?subject=Referral" class="btn-ref">
             Share the link
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
               <path d="M2 6.5h9M8 3l3.5 3.5L8 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1392,7 +1381,7 @@
       }
 
       // socials: enable each icon only once it has a real (non "#") URL
-      const socialUrls = { Instagram: s && s.instagram, TikTok: s && s.tiktok, Facebook: s && s.facebook };
+      const socialUrls = { Instagram: s && s.instagram, TikTok: s && s.tiktok, YouTube: s && s.youtube };
       document.querySelectorAll('.slink').forEach(a => {
         const label = a.getAttribute('aria-label') || '';
         const match = Object.keys(socialUrls).find(name => label.includes(name));
@@ -1501,12 +1490,10 @@
 
     /* ── DATA ── */
     const fallback = {
-      ip_1to1:  { ps: '£40',  mo: '£150/mo', m3: '£400',   yr: '£1,400' },
-      ip_group: { ps: '£10',  mo: '£35/mo' },
-      ip_cp:    { ps: '£70',  mo: '£25/mo',  m3: '£650',   yr: '£2,400' },
-      ol_1to1:  { ps: '£25',  mo: '£90/mo',  m3: '£250',   yr: '£800'   },
-      ol_group: { ps: '£10',  mo: '£35/mo' },
-      ol_cp:    { ps: '£40',  mo: '£150/mo', m3: '£400',   yr: '£1,400' },
+      ip_1to1: { ps: '£80',  s5: '£250', s10: '£400' },
+      ip_cp:   { ps: '£150', s5: '£400', s10: '£600' },
+      ol_1to1: { ps: '£50',  s5: '£200', s10: '£300' },
+      ol_cp:   { ps: '£80',  s5: '£300', s10: '£500' },
     };
 
     function fill(id, val) {
@@ -1536,36 +1523,26 @@
       } catch {}
 
       const map = [
-        ['/_data/pricing_in_person_1to1.json',    d => {
-          fill('ip-1to1-ps', d.per_session); fill('ip-1to1-mo', d.monthly); fill('ip-1to1-3m', d.three_months); fill('ip-1to1-yr', d.yearly);
+        ['/_data/pricing_in_person_1to1.json',   d => {
+          fill('ip-1to1-ps', d.per_session); fill('ip-1to1-5s', d.five_sessions); fill('ip-1to1-10s', d.ten_sessions);
           const s = d.stripe || {};
-          bookLink('book-ip-1to1-ps', s.per_session, stripeEnabled); bookLink('book-ip-1to1-mo', s.monthly, stripeEnabled); bookLink('book-ip-1to1-3m', s.three_months, stripeEnabled); bookLink('book-ip-1to1-yr', s.yearly, stripeEnabled);
-        }, () => { fill('ip-1to1-ps', fallback.ip_1to1.ps); fill('ip-1to1-mo', fallback.ip_1to1.mo); fill('ip-1to1-3m', fallback.ip_1to1.m3); fill('ip-1to1-yr', fallback.ip_1to1.yr); }],
-        ['/_data/pricing_in_person_group.json',   d => {
-          fill('ip-gr-ps', d.per_session); fill('ip-gr-mo', d.monthly);
+          bookLink('book-ip-1to1-ps', s.per_session, stripeEnabled); bookLink('book-ip-1to1-5s', s.five_sessions, stripeEnabled); bookLink('book-ip-1to1-10s', s.ten_sessions, stripeEnabled);
+        }, () => { fill('ip-1to1-ps', fallback.ip_1to1.ps); fill('ip-1to1-5s', fallback.ip_1to1.s5); fill('ip-1to1-10s', fallback.ip_1to1.s10); }],
+        ['/_data/pricing_in_person_couple.json', d => {
+          fill('ip-cp-ps', d.per_session); fill('ip-cp-5s', d.five_sessions); fill('ip-cp-10s', d.ten_sessions);
           const s = d.stripe || {};
-          bookLink('book-ip-gr-ps', s.per_session, stripeEnabled); bookLink('book-ip-gr-mo', s.monthly, stripeEnabled);
-        }, () => { fill('ip-gr-ps', fallback.ip_group.ps); fill('ip-gr-mo', fallback.ip_group.mo); }],
-        ['/_data/pricing_in_person_couple.json',  d => {
-          fill('ip-cp-ps', d.per_session); fill('ip-cp-mo', d.monthly); fill('ip-cp-3m', d.three_months); fill('ip-cp-yr', d.yearly);
+          bookLink('book-ip-cp-ps', s.per_session, stripeEnabled); bookLink('book-ip-cp-5s', s.five_sessions, stripeEnabled); bookLink('book-ip-cp-10s', s.ten_sessions, stripeEnabled);
+        }, () => { fill('ip-cp-ps', fallback.ip_cp.ps); fill('ip-cp-5s', fallback.ip_cp.s5); fill('ip-cp-10s', fallback.ip_cp.s10); }],
+        ['/_data/pricing_online_1to1.json',      d => {
+          fill('ol-1to1-ps', d.per_session); fill('ol-1to1-5s', d.five_sessions); fill('ol-1to1-10s', d.ten_sessions);
           const s = d.stripe || {};
-          bookLink('book-ip-cp-ps', s.per_session, stripeEnabled); bookLink('book-ip-cp-mo', s.monthly, stripeEnabled); bookLink('book-ip-cp-3m', s.three_months, stripeEnabled); bookLink('book-ip-cp-yr', s.yearly, stripeEnabled);
-        }, () => { fill('ip-cp-ps', fallback.ip_cp.ps); fill('ip-cp-mo', fallback.ip_cp.mo); fill('ip-cp-3m', fallback.ip_cp.m3); fill('ip-cp-yr', fallback.ip_cp.yr); }],
-        ['/_data/pricing_online_1to1.json',       d => {
-          fill('ol-1to1-ps', d.per_session); fill('ol-1to1-mo', d.monthly); fill('ol-1to1-3m', d.three_months); fill('ol-1to1-yr', d.yearly);
+          bookLink('book-ol-1to1-ps', s.per_session, stripeEnabled); bookLink('book-ol-1to1-5s', s.five_sessions, stripeEnabled); bookLink('book-ol-1to1-10s', s.ten_sessions, stripeEnabled);
+        }, () => { fill('ol-1to1-ps', fallback.ol_1to1.ps); fill('ol-1to1-5s', fallback.ol_1to1.s5); fill('ol-1to1-10s', fallback.ol_1to1.s10); }],
+        ['/_data/pricing_online_couple.json',    d => {
+          fill('ol-cp-ps', d.per_session); fill('ol-cp-5s', d.five_sessions); fill('ol-cp-10s', d.ten_sessions);
           const s = d.stripe || {};
-          bookLink('book-ol-1to1-ps', s.per_session, stripeEnabled); bookLink('book-ol-1to1-mo', s.monthly, stripeEnabled); bookLink('book-ol-1to1-3m', s.three_months, stripeEnabled); bookLink('book-ol-1to1-yr', s.yearly, stripeEnabled);
-        }, () => { fill('ol-1to1-ps', fallback.ol_1to1.ps); fill('ol-1to1-mo', fallback.ol_1to1.mo); fill('ol-1to1-3m', fallback.ol_1to1.m3); fill('ol-1to1-yr', fallback.ol_1to1.yr); }],
-        ['/_data/pricing_online_group.json',      d => {
-          fill('ol-gr-ps', d.per_session); fill('ol-gr-mo', d.monthly);
-          const s = d.stripe || {};
-          bookLink('book-ol-gr-ps', s.per_session, stripeEnabled); bookLink('book-ol-gr-mo', s.monthly, stripeEnabled);
-        }, () => { fill('ol-gr-ps', fallback.ol_group.ps); fill('ol-gr-mo', fallback.ol_group.mo); }],
-        ['/_data/pricing_online_couple.json',     d => {
-          fill('ol-cp-ps', d.per_session); fill('ol-cp-mo', d.monthly); fill('ol-cp-3m', d.three_months); fill('ol-cp-yr', d.yearly);
-          const s = d.stripe || {};
-          bookLink('book-ol-cp-ps', s.per_session, stripeEnabled); bookLink('book-ol-cp-mo', s.monthly, stripeEnabled); bookLink('book-ol-cp-3m', s.three_months, stripeEnabled); bookLink('book-ol-cp-yr', s.yearly, stripeEnabled);
-        }, () => { fill('ol-cp-ps', fallback.ol_cp.ps); fill('ol-cp-mo', fallback.ol_cp.mo); fill('ol-cp-3m', fallback.ol_cp.m3); fill('ol-cp-yr', fallback.ol_cp.yr); }],
+          bookLink('book-ol-cp-ps', s.per_session, stripeEnabled); bookLink('book-ol-cp-5s', s.five_sessions, stripeEnabled); bookLink('book-ol-cp-10s', s.ten_sessions, stripeEnabled);
+        }, () => { fill('ol-cp-ps', fallback.ol_cp.ps); fill('ol-cp-5s', fallback.ol_cp.s5); fill('ol-cp-10s', fallback.ol_cp.s10); }],
       ];
       await Promise.all(map.map(async ([url, apply, applyFallback]) => {
         try { const r = await fetch(url); if (!r.ok) throw 0; apply(await r.json()); }
@@ -1589,7 +1566,7 @@
     function renderMerch(items, shop, email) {
       const grid = document.getElementById('merch-grid');
       const shopLive = !!(shop && shop.enabled && shop.shopify_domain && shop.shopify_storefront_token);
-      const orderEmail = email || 'fitflexcity@gmail.com';
+      const orderEmail = email || 'naxyjoe999@gmail.com';
       grid.innerHTML = items.map((item, i) => {
         const enc = encodeURIComponent(item.name);
         const safeName = escapeHtml(item.name);

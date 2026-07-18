@@ -1,0 +1,16 @@
+# System
+.DS_Store
+**/.DS_Store
+
+# Source/backup files not needed for the site
+images/*.HEIC
+images/9E1226D2.jpg
+images/EBE9A0F0.jpg
+images/77E845B6-93EA-4462-B5EC-CA97651E55C8.JPG
+images/joehardy_pricelist.jpeg
+images/joehardy_pricelist_2.jpeg
+videos/hero-original-backup.mp4
+
+# Node (just in case)
+node_modules/
+.claude/
